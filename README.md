@@ -36,5 +36,5 @@ You can deploy the `dist` folder to any static host provider (netlify, surge, no
 
 ## Side
 
-Data Side
-Vitualization Side
+- Data Side
+- Vitualization Side
