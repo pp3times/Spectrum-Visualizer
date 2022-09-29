@@ -7,7 +7,6 @@ export const startFromFile = async () => {
   const byteArray = await res.arrayBuffer();
 
   const context = new AudioContext();
-
   const audioBuffer = await context.decodeAudioData(byteArray);
 
   const source = context.createBufferSource();
@@ -16,19 +15,20 @@ export const startFromFile = async () => {
   const analyzer = context.createAnalyser();
   analyzer.fftSize = 512;
 
-  source.connect(context.destination);
-  // analyzer.connect(context.destination);
+  source.connect(analyzer);
+  analyzer.connect(context.destination);
   source.start();
 
   const bufferLength = analyzer.frequencyBinCount;
   const dataArray = new Uint8Array(bufferLength);
+
   const update = () => {
     analyzer.getByteFrequencyData(dataArray);
-		setRawData(Array.from(dataArray));
-    // console.log(Array.from(dataArray));
-		requestAnimationFrame(update);
+    const orig = Array.from(dataArray);
+    setRawData([[...orig].reverse(), orig].flat());
+    requestAnimationFrame(update);
   };
-	requestAnimationFrame(update);
+  requestAnimationFrame(update);
 };
 
 export { rawData };
